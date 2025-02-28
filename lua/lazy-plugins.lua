@@ -23,7 +23,27 @@ require('lazy').setup({
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  {
+    'numToStr/Comment.nvim',
+    config = function()
+      -- To avoid waiting for g@
+      vim.keymap.del('n', 'gcc')
+
+      -- Unify shortcut for normal and visual modes
+      vim.keymap.set('n', 'gc', function()
+        require('Comment.api').toggle.linewise.current()
+      end)
+
+      -- Preserve visual selection after toggling comment/uncomment
+      vim.keymap.set('x', 'gc', function()
+        local api = require 'Comment.api'
+        local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)
+        vim.api.nvim_feedkeys(esc, 'nx', false)
+        api.locked 'toggle.linewise'(vim.fn.visualmode())
+        vim.cmd 'normal! gv'
+      end, { desc = 'Comment toggle linewise (visual) and preserve the visual selection' })
+    end,
+  },
 
   -- modular approach: using `require 'path/name'` will
   -- include a plugin definition from file lua/path/name.lua
@@ -40,7 +60,7 @@ require('lazy').setup({
 
   require 'kickstart/plugins/cmp',
 
-  require 'kickstart/plugins/tokyonight',
+  require 'kickstart/plugins/colorscheme',
 
   require 'kickstart/plugins/todo-comments',
 
@@ -48,6 +68,28 @@ require('lazy').setup({
 
   require 'kickstart/plugins/treesitter',
 
+  -- quick navigation
+  require 'kickstart/plugins/flash',
+
+  {
+    'stevearc/oil.nvim',
+    opts = {
+      delete_to_trash = true,
+      view_options = {
+        show_hidden = true,
+      },
+    },
+    -- Optional dependencies
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+  },
+  {
+    'vyfor/cord.nvim',
+    build = './build',
+    event = 'VeryLazy',
+    opts = {},
+  },
+  { 'wakatime/vim-wakatime', lazy = false },
+  { 'brenoprata10/nvim-highlight-colors', opts = {} },
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.

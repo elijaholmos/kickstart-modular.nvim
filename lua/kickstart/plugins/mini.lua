@@ -6,7 +6,7 @@ return {
       --
       -- Examples:
       --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [']quote
+      --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
 
@@ -15,7 +15,22 @@ return {
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
+      require('mini.surround').setup {
+        mappings = {
+          -- recommended 'm' starting char mappings to not conflict with leap (https://new.reddit.com/r/neovim/comments/1bl3dwz/comment/kw3xdd8)
+          -- 'z' may be another alternative?
+          add = 'ma', -- Add surrounding in Normal and Visual modes
+          delete = 'md', -- Delete surrounding
+          find = 'mf', -- Find surrounding (to the right)
+          find_left = 'mF', -- Find surrounding (to the left)
+          highlight = 'mh', -- Highlight surrounding
+          replace = 'mr', -- Replace surrounding
+          update_n_lines = 'mn', -- Update `n_lines`
+
+          suffix_last = 'l', -- Suffix to search with "prev" method
+          suffix_next = 'n', -- Suffix to search with "next" method
+        },
+      }
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
@@ -31,6 +46,16 @@ return {
       statusline.section_location = function()
         return '%2l:%-2v'
       end
+
+      require('mini.indentscope').setup {
+        draw = {
+          delay = 100,
+          priority = 2,
+          animation = function(s, n)
+            return s / n * 20
+          end,
+        },
+      }
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
