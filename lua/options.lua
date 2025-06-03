@@ -61,4 +61,10 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Update buffer if file changes on disk (https://superuser.com/questions/181377/auto-reloading-a-file-in-vim-as-soon-as-it-changes-on-disk)
+vim.api.nvim_create_autocmd('CursorHold', {
+  pattern = '*',
+  command = 'checktime',
+})
+
 -- vim: ts=2 sts=2 sw=2 et
