@@ -84,7 +84,9 @@ require('lazy').setup({
     'vyfor/cord.nvim',
     build = ':Cord update',
     event = 'VeryLazy',
-    -- opts = {}
+    opts = {
+      idle = { enabled = false },
+    },
   },
   { 'wakatime/vim-wakatime', lazy = false },
   { 'brenoprata10/nvim-highlight-colors', opts = {} },
